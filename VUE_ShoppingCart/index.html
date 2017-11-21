@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Michaels Stuff</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Michaels Stuff Inc.</h1>
+    </header>
+    <div id="app">
+      <div class="container">
+      <div v-if="!isShowingCart" id="products" class="row">
+        <div v-for="product in products" :class="groupWrapper"  class="item  col-xs-4 col-lg-4">
+          <div class="thumbnail">
+            <img class="group list-group-image" src="" alt="" />
+            <div class="caption">
+              <h4 class="group inner list-group-item-heading">
+              {{product.name}}</h4>
+              <p class="group inner list-group-item-text">
+              {{product.description}}</p>
+            <div class="row">
+              <div class="col-xs-12 col-md-6">
+                <p class="lead">
+                  {{product.price | currency}}</p>
+                </div>
+                <div class="col-xs-8 flex flex-row align-center justify-right">
+                  <div class="number-in-stock" :class="{ few: product.inStock < 10 && product.inStock > 0, none: product.inStock == 0 }" >
+                    {{ product.inStock }} in stock
+                  </div>
+                  <button class="btn btn-success" @click="addProductToCart(product)" :disabled="product.inStock == 0" >Add to cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <h1>Cart</h1>
+        <table v-if="cart.items.length > 0" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in cart.items">
+              <td>{{ item.product.name }}</td>
+              <td>
+                {{ item.quantity }} &nbsp;
+                <button class="btn btn-success" @click="increaseQuantity(item)" :disabled="item.product.inStock == 0">+</button>
+                <button class="btn btn-danger" @click="decreaseQuantity(item)">-</button>
+              </td>
+              <td>{{ item.quantity * item.product.price | currency }}</td>
+            </tr>
+
+            <tr>
+              <td class="text-right" colspan="2">
+                <strong>Subtotal</strong>
+              </td>
+
+              <td>{{ cartTotal | currency }}</td>
+            </tr>
+
+            <tr>
+              <td class="text-right" colspan="2">
+                <strong>Taxes</strong>
+              </td>
+
+              <td>{{ taxAmount | currency }}</td>
+            </tr>
+
+            <tr>
+              <td class="text-right" colspan="2">
+                <strong>Grand total</strong>
+              </td>
+
+              <td>{{ cartTotal + taxAmount | currency }}</td>
+            </tr>
+
+            <tr>
+              <td colspan="2"></td>
+              <td><button class="btn btn-success" @click="checkout">Checkout</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p v-else>Your cart is currently empty.</p>
+
+
+      </div>
+    </div>
+
+
+  </div>
+  <script src="app.js"></script>
+  </body>
+</html>
